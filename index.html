@@ -1,0 +1,1646 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f172a" id="themeColorMeta">
+<meta name="description" content="Hisaab Pro Lite - Offline Ledger, Stock & Receivables Manager. Fast, tiny, powerful.">
+<title>Hisaab Pro Lite | Ledger Edition</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hisaab Lite">
+
+<style>
+/* ================= THEME ================= */
+:root{
+  --bg:#f7f9fc; --bg-soft:#eef2f7; --card:#ffffff; --card-soft:#f8fafc;
+  --border:#e2e8f0; --border-strong:#cbd5e1;
+  --text:#1e293b; --text-strong:#0b1220; --text-mute:#475569; --text-dim:#94a3b8;
+  --input-bg:#f8fafc; --input-bg-focus:#ffffff; --input-border:#e2e8f0;
+  --overlay:rgba(15,23,42,.55);
+  --header-bg:rgba(255,255,255,.94);
+  --shadow:0 4px 14px rgba(15,23,42,.06);
+  --shadow-lg:0 18px 40px rgba(15,23,42,.18);
+  --accent:#4f46e5; --accent-2:#6366f1; --accent-soft:rgba(99,102,241,.12);
+  --danger:#e11d48; --danger-soft:rgba(225,29,72,.1);
+  --success:#059669; --success-soft:rgba(5,150,105,.1);
+  --warn:#d97706;
+  --grad:linear-gradient(135deg,#0f172a 0%,#1e1b4b 55%,#312e81 100%);
+}
+body.dark{
+  --bg:#060a16; --bg-soft:#0d1424; --card:#131c30; --card-soft:#0d1424;
+  --border:#26324c; --border-strong:#334155;
+  --text:#e2e8f0; --text-strong:#ffffff; --text-mute:#a5b0c2; --text-dim:#64748b;
+  --input-bg:#0a1020; --input-bg-focus:#0d1424; --input-border:#26324c;
+  --overlay:rgba(0,0,0,.75);
+  --header-bg:rgba(13,20,36,.94);
+  --shadow:0 4px 16px rgba(0,0,0,.5);
+  --shadow-lg:0 20px 50px rgba(0,0,0,.7);
+  --accent:#818cf8; --accent-2:#6366f1; --accent-soft:rgba(129,140,248,.14);
+  --danger:#fb7185; --danger-soft:rgba(251,113,133,.12);
+  --success:#34d399; --success-soft:rgba(52,211,153,.12);
+  --warn:#fbbf24;
+  --grad:linear-gradient(135deg,#1e1b4b 0%,#312e81 55%,#4338ca 100%);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Outfit,system-ui,sans-serif;
+  background:var(--bg); color:var(--text);
+  font-size:14px; line-height:1.45; overflow-x:hidden;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  transition:background .25s ease,color .25s ease;
+  overscroll-behavior-y:none;
+}
+img,svg{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--text);background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;padding:10px 12px;width:100%;outline:none;transition:border-color .18s,background .18s,box-shadow .18s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);background:var(--input-bg-focus);box-shadow:0 0 0 3px var(--accent-soft)}
+input::placeholder,textarea::placeholder{color:var(--text-dim)}
+input[type=date]{min-height:42px}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+
+/* ================= LAYOUT ================= */
+.app{max-width:560px;margin:0 auto;padding:0 14px;width:100%}
+@media(min-width:768px){ .app{max-width:680px;padding:0 20px} body{font-size:15px} }
+@media(min-width:1024px){ .app{max-width:760px} }
+
+/* ================= HEADER ================= */
+.hdr{
+  position:sticky;top:0;z-index:40;
+  background:var(--header-bg);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:10px 14px;
+}
+.hdr-in{max-width:560px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+@media(min-width:768px){ .hdr-in{max-width:680px} }
+@media(min-width:1024px){ .hdr-in{max-width:760px} }
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-logo{width:36px;height:36px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px}
+.brand-txt{min-width:0}
+.brand-txt h1{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.2px;color:var(--text-strong);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-txt p{font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+.icon-btn{
+  width:38px;height:38px;border-radius:12px;
+  background:var(--accent-soft);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--accent-soft);
+  transition:transform .12s,background .18s;
+}
+.icon-btn:active{transform:scale(.9)}
+.icon-btn svg{width:18px;height:18px}
+
+.theme-btn{position:relative;overflow:hidden}
+.theme-btn .ic{position:absolute;transition:transform .3s,opacity .3s}
+.theme-btn .ic-moon{opacity:1;transform:rotate(0)}
+.theme-btn .ic-sun{opacity:0;transform:rotate(-90deg) scale(.4)}
+body.dark .theme-btn .ic-moon{opacity:0;transform:rotate(90deg) scale(.4)}
+body.dark .theme-btn .ic-sun{opacity:1;transform:rotate(0) scale(1)}
+
+.btn-primary{
+  background:var(--accent);color:#fff;font-weight:800;font-size:12px;
+  padding:10px 14px;border-radius:12px;letter-spacing:.3px;
+  display:inline-flex;align-items:center;gap:6px;
+  box-shadow:0 6px 16px -6px var(--accent);
+  transition:transform .12s,filter .18s;
+  white-space:nowrap;
+}
+.btn-primary:active{transform:scale(.95)}
+.btn-primary svg{width:14px;height:14px}
+.btn-primary.sm{padding:8px 12px;font-size:11px}
+
+/* ================= CARDS / SECTIONS ================= */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px;
+  box-shadow:var(--shadow);
+  transition:background .25s,border-color .25s;
+}
+.section-title{
+  font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--text-strong);display:flex;align-items:center;gap:8px;
+  margin-bottom:10px;
+}
+.section-title svg{width:16px;height:16px;color:var(--accent)}
+.mt-6{margin-top:18px}
+.mb-3{margin-bottom:12px}
+
+/* ================= KPI ================= */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.kpi{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:14px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.kpi::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:var(--accent);
+}
+.kpi.kpi-rose::before{background:var(--danger)}
+.kpi-label{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)}
+.kpi-val{font-size:26px;font-weight:900;color:var(--text-strong);letter-spacing:-.5px;margin-top:6px;line-height:1}
+.kpi.kpi-rose .kpi-val{color:var(--danger)}
+
+/* ================= SEARCH PANEL ================= */
+.search-panel{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:12px;margin-top:16px;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:10px;
+}
+.search-wrap{position:relative}
+.search-wrap input{padding-left:36px}
+.search-wrap svg{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:16px;height:16px;color:var(--text-dim);pointer-events:none;
+}
+.search-row{display:flex;gap:8px}
+.search-row input{flex:1;font-size:12px;padding:9px 10px}
+.btn-ghost{
+  background:var(--bg-soft);color:var(--text-mute);font-weight:700;font-size:11px;
+  padding:9px 12px;border-radius:10px;text-transform:uppercase;letter-spacing:.4px;
+  border:1px solid var(--border);transition:background .18s,color .18s;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-ghost:active{background:var(--border)}
+
+/* ================= ACCOUNT LIST ================= */
+.acc-list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.acc{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:13px;box-shadow:var(--shadow);cursor:pointer;
+  transition:transform .12s,border-color .18s,box-shadow .18s;
+}
+.acc:active{transform:scale(.985)}
+.acc:hover{border-color:var(--accent)}
+.acc-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+.acc-info{min-width:0;flex:1}
+.acc-name{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.2px;color:var(--text-strong);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic}
+.acc-phone{font-size:9.5px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.7px;margin-top:3px}
+.acc-del{
+  width:30px;height:30px;border-radius:10px;background:var(--danger-soft);color:var(--danger);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.acc-del svg{width:14px;height:14px}
+.acc-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{padding:8px;border-radius:11px;text-align:center;border:1px solid var(--border)}
+.stat-hold{background:var(--accent-soft);border-color:transparent}
+.stat-bal{background:var(--danger-soft);border-color:transparent}
+.stat-lbl{font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-mute);margin-bottom:2px}
+.stat-val{font-size:15px;font-weight:900;color:var(--text-strong)}
+.stat-bal .stat-val{color:var(--danger)}
+
+.empty{
+  text-align:center;padding:44px 16px;
+  background:var(--card);border:1.5px dashed var(--border-strong);border-radius:16px;
+  color:var(--text-dim);
+}
+.empty-ic{font-size:34px;display:block;margin-bottom:8px}
+.empty p{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+
+/* ================= DRAWER ================= */
+.drawer-bd{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:90;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.drawer-bd.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;bottom:0;left:0;width:290px;max-width:85vw;
+  background:var(--grad);color:#fff;z-index:100;
+  transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;padding:20px 16px;
+  box-shadow:20px 0 50px rgba(0,0,0,.4);
+}
+.drawer.open{transform:translateX(0)}
+.drawer-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.drawer-brand{display:flex;align-items:center;gap:10px}
+.drawer-logo{width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:18px}
+.drawer-brand h2{font-size:17px;font-weight:900;letter-spacing:-.3px}
+.drawer-brand h2 span{color:#a5b4fc}
+.drawer-close{
+  width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;
+  transition:background .18s;
+}
+.drawer-close:active{background:rgba(255,255,255,.2)}
+.drawer-nav{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding-right:4px}
+.dnav{
+  display:flex;align-items:center;gap:12px;padding:12px;
+  border-radius:14px;color:#fff;text-align:left;font-size:12.5px;font-weight:700;
+  transition:background .18s;
+}
+.dnav:hover{background:rgba(255,255,255,.1)}
+.dnav:active{background:rgba(255,255,255,.18)}
+.dnav .dnav-ic{font-size:17px;line-height:1;flex-shrink:0;width:20px;text-align:center}
+.dnav .dnav-tx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dnav-div{height:1px;background:rgba(255,255,255,.12);margin:6px 4px}
+.drawer-foot{margin-top:12px}
+.dnav-settings{
+  padding:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;display:flex;justify-content:space-between;align-items:center;width:100%;
+  color:#fff;text-align:left;
+}
+.dnav-settings small{display:block;font-size:9px;font-weight:900;color:#a5b4fc;text-transform:uppercase;letter-spacing:1.4px}
+.dnav-settings strong{display:block;font-size:12px;font-weight:800;margin-top:2px}
+
+/* ================= LEDGER OVERLAY ================= */
+.ledger{
+  position:fixed;inset:0;background:var(--bg);z-index:80;
+  display:none;flex-direction:column;
+}
+.ledger.on{display:flex}
+.ledger-nav{
+  background:var(--card);border-bottom:1px solid var(--border);
+  padding:12px 14px;display:flex;justify-content:space-between;align-items:center;
+  gap:8px;flex-wrap:wrap;
+}
+.ledger-nav .inner{max-width:560px;margin:0 auto;width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+@media(min-width:768px){ .ledger-nav .inner{max-width:680px} }
+@media(min-width:1024px){ .ledger-nav .inner{max-width:760px} }
+.back-btn{
+  width:40px;height:40px;border-radius:12px;background:var(--bg-soft);
+  display:flex;align-items:center;justify-content:center;color:var(--text-strong);flex-shrink:0;
+}
+.back-btn svg{width:18px;height:18px}
+.ledger-actions{display:flex;gap:6px;flex-wrap:wrap}
+.la-btn{
+  padding:8px 12px;border-radius:11px;font-size:10.5px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.5px;display:inline-flex;align-items:center;gap:5px;
+  transition:transform .12s,filter .18s;
+}
+.la-btn:active{transform:scale(.95)}
+.la-wa{background:var(--success-soft);color:var(--success)}
+.la-shot{background:var(--accent-soft);color:var(--accent)}
+.la-pdf{background:var(--text-strong);color:var(--card)}
+body.dark .la-pdf{background:var(--accent);color:#fff}
+
+.ledger-body{flex:1;overflow-y:auto;padding:14px}
+.ledger-body .inner{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding-bottom:110px}
+@media(min-width:768px){ .ledger-body .inner{max-width:680px} }
+@media(min-width:1024px){ .ledger-body .inner{max-width:760px} }
+
+.client-hero{
+  background:var(--grad);color:#fff;border-radius:18px;padding:18px;
+  position:relative;overflow:hidden;box-shadow:var(--shadow-lg);
+}
+.client-hero::after{
+  content:"";position:absolute;right:-30px;top:-30px;width:130px;height:130px;
+  border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none;
+}
+.client-hero-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
+.client-hero h2{font-size:20px;font-weight:900;letter-spacing:-.4px;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.client-hero .ph{font-size:11px;font-weight:700;color:#c7d2fe;letter-spacing:.6px;margin-top:4px;text-transform:uppercase}
+.edit-hero-btn{
+  background:rgba(255,255,255,.1);color:#fff;padding:6px 10px;border-radius:10px;
+  font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;
+  flex-shrink:0;
+}
+.edit-hero-btn:active{background:rgba(255,255,255,.2)}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);padding:10px;border-radius:12px}
+.hero-stat .l{font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#c7d2fe;margin-bottom:4px}
+.hero-stat .v{font-size:19px;font-weight:900;letter-spacing:-.3px;color:#fff}
+.hero-stat.rose .l{color:#fecdd3}
+.hero-stat.rose .v{color:#fecaca}
+
+.slip{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:13px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;
+}
+.slip-hdr{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.slip-id{background:var(--text-strong);color:var(--card);padding:4px 9px;border-radius:8px;font-size:9px;font-weight:900;letter-spacing:.8px}
+body.dark .slip-id{background:var(--accent);color:#fff}
+.slip-tools{display:flex;gap:10px;font-size:9.5px;font-weight:800}
+.slip-tools button{text-transform:uppercase;letter-spacing:.5px}
+.tool-edit{color:var(--accent)}
+.tool-receipt{color:var(--success)}
+.tool-del{color:var(--danger)}
+.slip-bill{background:var(--card-soft);border:1px solid var(--accent-soft);padding:11px;border-radius:12px;display:flex;justify-content:space-between;align-items:center}
+.slip-bill-l{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-mute)}
+.slip-bill-v{font-size:19px;font-weight:900;letter-spacing:-.4px;color:var(--text-strong)}
+.slip-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.slip-box{background:var(--card-soft);border:1px solid var(--border);border-radius:11px;padding:9px;text-align:center}
+.slip-box.paid{background:var(--success-soft);border-color:transparent}
+.slip-box .lbl{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-mute);margin-bottom:3px}
+.slip-box.paid .lbl{color:var(--success)}
+.slip-box .vals{display:flex;justify-content:space-around;font-size:12px;font-weight:900;color:var(--text-strong);gap:4px}
+.slip-note{background:var(--card-soft);border:1.5px dashed var(--border-strong);padding:9px 11px;border-radius:11px;font-size:11px;font-style:italic;color:var(--text-mute);line-height:1.5}
+.slip-foot{display:flex;justify-content:space-between;align-items:center;padding-top:9px;border-top:1px solid var(--border);font-size:9.5px;font-weight:800;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;gap:8px;flex-wrap:wrap}
+.slip-foot .unpaid{color:var(--danger);font-size:12px;font-weight:900;text-transform:none;letter-spacing:0}
+
+.fab-wrap{
+  position:fixed;left:0;right:0;bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  display:flex;justify-content:center;z-index:85;pointer-events:none;padding:0 14px;
+}
+.fab{
+  background:var(--accent);color:#fff;padding:14px 26px;border-radius:99px;
+  font-size:11.5px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;
+  box-shadow:0 14px 30px -10px var(--accent);
+  display:inline-flex;align-items:center;gap:8px;pointer-events:auto;
+  transition:transform .12s,filter .18s;
+}
+.fab:active{transform:scale(.94)}
+
+/* ================= MODALS ================= */
+.bd{
+  position:fixed;inset:0;background:var(--overlay);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:14px;
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+}
+.bd.on{display:flex}
+.modal{
+  background:var(--card);border:1px solid var(--border);border-radius:22px;
+  width:100%;max-width:400px;padding:22px;box-shadow:var(--shadow-lg);
+  max-height:90vh;overflow-y:auto;
+  transform:scale(.95);opacity:0;transition:transform .2s,opacity .2s;
+}
+.bd.on .modal{transform:scale(1);opacity:1}
+.modal.hidden{display:none}
+.modal h3{
+  font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;
+  display:flex;align-items:center;gap:8px;margin-bottom:16px;color:var(--text-strong);
+}
+.modal h3.center{justify-content:center;text-align:center}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px}
+.fgrid .full{grid-column:1/-1}
+.fld{display:flex;flex-direction:column}
+.fld label{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:5px}
+.fld input,.fld select{padding:10px 12px;font-size:13px;font-weight:700}
+.fld input.big{font-size:17px;font-weight:900;padding:12px}
+.actions{display:flex;gap:9px}
+.actions .btn-primary{flex:1;justify-content:center;padding:13px}
+.actions .btn-cancel{
+  flex:1;background:var(--bg-soft);color:var(--text-mute);font-weight:800;font-size:12px;
+  padding:13px;border-radius:12px;text-transform:uppercase;letter-spacing:.4px;
+  border:1px solid var(--border);
+}
+.actions .btn-cancel:active{background:var(--border)}
+
+/* Trash / Contacts list */
+.tlist{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow-y:auto;padding-right:4px}
+.tlist-item{
+  background:var(--card-soft);border:1px solid var(--border);border-radius:12px;
+  padding:10px 11px;display:flex;justify-content:space-between;align-items:center;gap:8px;
+}
+.tlist-item .info{flex:1;min-width:0}
+.tlist-item .type{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)}
+.tlist-item .name{font-size:12.5px;font-weight:800;color:var(--text-strong);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tlist-actions{display:flex;gap:5px;flex-shrink:0}
+.mini-btn{
+  padding:6px 9px;border-radius:9px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;
+}
+.mini-restore{background:var(--success-soft);color:var(--success)}
+.mini-purge{background:var(--danger-soft);color:var(--danger)}
+
+/* Delete confirm modal */
+.del-modal{text-align:center;max-width:380px}
+.del-modal .warn{font-size:34px;display:block;margin-bottom:6px}
+.del-modal .lbl{font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim);margin-bottom:6px}
+.del-modal .target{font-size:17px;font-weight:900;color:var(--danger);font-style:italic;margin-bottom:14px;word-break:break-word}
+.del-modal input{padding:13px;text-align:center;font-weight:800;letter-spacing:2px;font-size:14px;border-width:2px;margin-bottom:14px}
+.del-modal input:focus{border-color:var(--danger);box-shadow:0 0 0 3px var(--danger-soft)}
+
+/* ================= TOASTS ================= */
+.toasts{position:fixed;top:16px;right:16px;left:16px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+@media(min-width:600px){ .toasts{left:auto;width:360px} }
+.toast{
+  background:var(--text-strong);color:var(--card);
+  padding:11px 14px;border-radius:12px;font-size:12px;font-weight:800;
+  display:flex;align-items:center;gap:8px;
+  box-shadow:var(--shadow-lg);pointer-events:auto;
+  border-left:4px solid var(--accent);
+  animation:toastIn .28s ease both;
+  transition:transform .25s,opacity .25s;
+}
+.toast.t-out{transform:translateY(-8px);opacity:0}
+.toast.success{border-left-color:var(--success)}
+.toast.error{border-left-color:var(--danger)}
+@keyframes toastIn{from{transform:translateY(-14px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* ================= PWA INSTALL BANNER ================= */
+.install-banner{
+  position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  width:calc(100% - 28px);max-width:500px;
+  background:linear-gradient(135deg,#1e293b,#0f172a);
+  border:1px solid var(--accent);border-radius:16px;
+  padding:12px 14px;display:flex;align-items:center;gap:12px;
+  z-index:150;box-shadow:0 14px 40px rgba(0,0,0,.5);color:#fff;
+  opacity:0;pointer-events:none;
+  transform:translateX(-50%) translateY(24px);
+  transition:opacity .28s,transform .28s;
+}
+.install-banner.on{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.install-banner .ic{
+  width:38px;height:38px;border-radius:11px;background:var(--grad);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.install-banner .tt{flex:1;min-width:0}
+.install-banner .tt strong{font-size:13px;font-weight:800;display:block;line-height:1.2}
+.install-banner .tt small{font-size:10px;color:#94a3b8;line-height:1.2}
+.install-banner .btn-inst{
+  background:var(--accent);color:#fff;font-weight:900;font-size:12px;
+  padding:9px 14px;border-radius:11px;white-space:nowrap;flex-shrink:0;
+}
+.install-banner .btn-x{
+  color:#64748b;font-size:22px;line-height:1;padding:2px 4px;flex-shrink:0;
+}
+
+/* ================= CAPTURE ZONE (offscreen) ================= */
+#capZone{
+  position:fixed;left:-20000px;top:0;width:420px;background:#fff;
+  font-family:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#111;
+}
+#capZone .cap-hd{background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%);color:#fff;padding:28px 24px;text-align:center}
+#capZone .cap-hd h2{font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:-.4px;margin:0;color:#fff}
+#capZone .cap-hd p{font-size:13px;font-weight:700;color:#cbd5e1;margin-top:5px;letter-spacing:.4px}
+#capZone .cap-body{padding:26px 22px;background:#fff}
+#capZone .cap-foot{background:#f8fafc;padding:16px;text-align:center;border-top:1px dashed #cbd5e1}
+#capZone .cap-foot p{font-size:10px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:2px;margin:0}
+
+/* ================= Scrollbar ================= */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:99px}
+::-webkit-scrollbar-track{background:transparent}
+
+@media(max-width:340px){
+  .hdr-actions .btn-primary{padding:9px 10px;font-size:10.5px}
+  .kpi-val{font-size:22px}
+  .acc-name{font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Off-screen Capture Zone (rendered white always) ===== -->
+<div id="capZone">
+  <div class="cap-hd">
+    <h2 id="capShop">HISAAB PRO</h2>
+    <p id="capPhone">0300-0000000</p>
+  </div>
+  <div class="cap-body" id="capBody"></div>
+  <div class="cap-foot"><p>⚡ Powered by Hisaab Pro Lite</p></div>
+</div>
+
+<!-- ===== Toasts ===== -->
+<div class="toasts" id="toasts"></div>
+
+<!-- ===== Drawer backdrop + Drawer ===== -->
+<div class="drawer-bd" id="drawerBd" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-hdr">
+    <div class="drawer-brand">
+      <div class="drawer-logo">📒</div>
+      <h2>HISAAB <span>LITE</span></h2>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <nav class="drawer-nav">
+    <button class="dnav" onclick="openWADirect()"><span class="dnav-ic">💬</span><span class="dnav-tx">WhatsApp Direct</span></button>
+    <button class="dnav" onclick="openTrash()"><span class="dnav-ic">🗑️</span><span class="dnav-tx">Trash / Deleted</span></button>
+    <div class="dnav-div"></div>
+    <button class="dnav" onclick="installPWA()"><span class="dnav-ic">📲</span><span class="dnav-tx">Install App</span></button>
+    <button class="dnav" onclick="toggleTheme();closeDrawer()"><span class="dnav-ic" id="dnavThemeIcon">🌙</span><span class="dnav-tx" id="dnavThemeText">Dark Mode</span></button>
+    <div class="dnav-div"></div>
+    <button class="dnav" onclick="exportData()"><span class="dnav-ic">📤</span><span class="dnav-tx">Backup Database</span></button>
+    <label class="dnav" style="cursor:pointer">
+      <span class="dnav-ic">📥</span><span class="dnav-tx">Restore Database</span>
+      <input type="file" accept=".txt,.json" style="display:none" onchange="importData(event)">
+    </label>
+    <div class="dnav-div"></div>
+    <button class="dnav" onclick="downloadStandaloneHTML()"><span class="dnav-ic">🌐</span><span class="dnav-tx">Download Full HTML</span></button>
+  </nav>
+  <div class="drawer-foot">
+    <button class="dnav-settings" onclick="openSettings()">
+      <div>
+        <small>Global Config</small>
+        <strong>Store Settings</strong>
+      </div>
+      <span style="font-size:18px;background:rgba(99,102,241,.35);padding:6px;border-radius:9px">⚙️</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== Header ===== -->
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="brand">
+      <button class="icon-btn" onclick="openDrawer()" aria-label="Menu">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="brand-txt">
+        <h1 id="hdShop">HISAAB PRO</h1>
+        <p id="hdPhone">0300-0000000</p>
+      </div>
+    </div>
+    <div class="hdr-actions">
+      <button class="icon-btn theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="ic ic-moon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg class="ic ic-sun" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+      </button>
+      <button class="btn-primary" onclick="openClientModal()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M12 4v16m8-8H4"/></svg>
+        <span class="lbl-full">New Account</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Home ===== -->
+<main class="app">
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Active Stock Hold</div>
+      <div class="kpi-val" id="kpiHold">0</div>
+    </div>
+    <div class="kpi kpi-rose">
+      <div class="kpi-label">Total Receivables</div>
+      <div class="kpi-val" id="kpiBal">Rs 0</div>
+    </div>
+  </div>
+
+  <div class="search-panel">
+    <div class="search-wrap">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="searchIn" placeholder="Search Name, Phone, Slip ID..." oninput="render()">
+    </div>
+    <div class="search-row">
+      <input type="date" id="dateIn" onchange="render()">
+      <button class="btn-ghost" onclick="clearFilters()">Clear</button>
+    </div>
+  </div>
+
+  <div class="acc-list" id="accList"></div>
+</main>
+
+<!-- ===== Ledger Overlay ===== -->
+<section class="ledger" id="ledger">
+  <nav class="ledger-nav">
+    <div class="inner">
+      <button class="back-btn" onclick="closeLedger()" aria-label="Back">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      </button>
+      <div class="ledger-actions">
+        <button class="la-btn la-wa" onclick="sendWAStatement()">💬 <span class="lbl-full">WhatsApp</span></button>
+        <button class="la-btn la-shot" onclick="captureStatement()">📸 <span class="lbl-full">Shot</span></button>
+        <button class="la-btn la-pdf" onclick="downloadPDF()">📄 <span class="lbl-full">PDF</span></button>
+      </div>
+    </div>
+  </nav>
+  <div class="ledger-body">
+    <div class="inner">
+      <div class="client-hero">
+        <div class="client-hero-hdr">
+          <div style="min-width:0;flex:1">
+            <h2 id="lgName">Client</h2>
+            <div class="ph" id="lgPhone"></div>
+          </div>
+          <button class="edit-hero-btn" onclick="openClientEdit()">✏️ Edit</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="l">Active Hold</div><div class="v" id="lgHold">0</div></div>
+          <div class="hero-stat rose"><div class="l">Payable Bal</div><div class="v" id="lgBal">Rs 0</div></div>
+        </div>
+      </div>
+      <div class="acc-list" id="slipList" style="margin-top:0"></div>
+    </div>
+  </div>
+  <div class="fab-wrap"><button class="fab" onclick="openSlipModal()"><span style="font-size:15px">+</span> Add New Slip</button></div>
+</section>
+
+<!-- ===== Modals ===== -->
+<div class="bd" id="bd" onclick="if(event.target===this)closeModal()">
+
+  <!-- Slip modal -->
+  <div class="modal hidden" id="mSlip">
+    <h3>📝 Slip Transaction Entry</h3>
+    <input type="hidden" id="fSlipId">
+    <div class="fgrid">
+      <div class="fld full"><label>Total Bill Amount (Rs)</label><input type="number" id="fBill" class="big" placeholder="0" inputmode="numeric"></div>
+      <div class="fld"><label>Stock Sent</label><input type="number" id="fSent" placeholder="0" inputmode="numeric"></div>
+      <div class="fld"><label>Stock Returned</label><input type="number" id="fBack" placeholder="0" inputmode="numeric"></div>
+      <div class="fld"><label>Cash Paid (Rs)</label><input type="number" id="fCash" placeholder="0" inputmode="numeric"></div>
+      <div class="fld"><label>Bank Paid (Rs)</label><input type="number" id="fBank" placeholder="0" inputmode="numeric"></div>
+      <div class="fld full"><label>Slip Date</label><input type="date" id="fDate"></div>
+      <div class="fld full"><label>Note / Particulars</label><input type="text" id="fNote" placeholder="Add custom note..."></div>
+    </div>
+    <div class="actions">
+      <button class="btn-primary" onclick="saveSlip()">Save Entry</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Client modal -->
+  <div class="modal hidden" id="mClient">
+    <h3 class="center">👤 Client Register</h3>
+    <input type="hidden" id="fClientId">
+    <div class="fgrid">
+      <div class="fld full"><label>Client Full Name</label><input type="text" id="fClientName" placeholder="e.g. Ali Ahmed"></div>
+      <div class="fld full"><label>Phone (with country code)</label><input type="tel" id="fClientPhone" placeholder="923001234567"></div>
+    </div>
+    <div class="actions">
+      <button class="btn-primary" onclick="saveClient()">Save Client</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Settings modal -->
+  <div class="modal hidden" id="mSettings">
+    <h3 class="center">⚙️ Store Settings</h3>
+    <div class="fgrid">
+      <div class="fld full"><label>Business Name</label><input type="text" id="fShop" placeholder="Shop / Brand Name"></div>
+      <div class="fld full"><label>Official Support Phone</label><input type="tel" id="fShopPhone" placeholder="Official Contact"></div>
+    </div>
+    <div class="actions">
+      <button class="btn-primary" onclick="saveSettings()">Save</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Trash modal -->
+  <div class="modal hidden" id="mTrash">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="margin:0">🗑️ Trash Recovery</h3>
+      <button class="mini-btn mini-purge" onclick="emptyTrash()">Empty All</button>
+    </div>
+    <div class="tlist" id="trashList"></div>
+    <div class="actions" style="margin-top:16px">
+      <button class="btn-cancel" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- WA Direct modal -->
+  <div class="modal hidden" id="mWA">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="margin:0">💬 WhatsApp Direct</h3>
+      <button class="mini-btn mini-restore" onclick="addWAContact()">+ Add</button>
+    </div>
+    <div class="tlist" id="waList"></div>
+    <div class="actions" style="margin-top:16px">
+      <button class="btn-cancel" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- Delete confirm modal -->
+  <div class="modal del-modal hidden" id="mDelete">
+    <span class="warn">⚠️</span>
+    <div class="lbl">Type below to move to trash:</div>
+    <div class="target" id="delTarget"></div>
+    <input type="text" id="delInput" placeholder="Type exactly..." autocomplete="off">
+    <div class="actions">
+      <button class="btn-cancel" style="color:var(--danger)" id="delConfirmBtn">Send to Trash</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Install Help Modal ===== -->
+<div class="bd" id="bdHelp" onclick="if(event.target===this)closeHelp()">
+  <div class="modal" style="max-width:420px">
+    <h3>📲 Install Kaise Karen</h3>
+    <div id="helpBody" style="font-size:13px;color:var(--text-mute);line-height:1.65"></div>
+    <div class="actions" style="margin-top:16px">
+      <button class="btn-primary" onclick="closeHelp()">Samajh Gaya</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PWA Install Banner ===== -->
+<div class="install-banner" id="installBanner">
+  <div class="ic">
+    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2.4"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+  </div>
+  <div class="tt">
+    <strong>Hisaab Pro Install Karen</strong>
+    <small>Offline bhi chalega • Home screen par</small>
+  </div>
+  <button class="btn-inst" onclick="installPWA()">Install</button>
+  <button class="btn-x" onclick="dismissInstall()">×</button>
+</div>
+
+<!-- Hidden file input for restore -->
+<input type="file" id="hiddenRestore" accept=".txt,.json" style="display:none">
+
+<script>
+/* =========================================================
+   THEME
+   ========================================================= */
+const THEME_KEY='hlite_theme';
+function applyTheme(t){
+  const dark = t==='dark';
+  document.body.classList.toggle('dark', dark);
+  const meta=document.getElementById('themeColorMeta');
+  if(meta) meta.setAttribute('content', dark?'#060a16':'#f7f9fc');
+  const ic=document.getElementById('dnavThemeIcon');
+  const tx=document.getElementById('dnavThemeText');
+  if(ic) ic.textContent = dark?'☀️':'🌙';
+  if(tx) tx.textContent = dark?'Light Mode':'Dark Mode';
+}
+function toggleTheme(){
+  const cur = localStorage.getItem(THEME_KEY)||'light';
+  const next = cur==='dark'?'light':'dark';
+  localStorage.setItem(THEME_KEY,next);
+  applyTheme(next);
+  toast(next==='dark'?'Dark mode on 🌙':'Light mode on ☀️','info');
+}
+applyTheme(localStorage.getItem(THEME_KEY)||'light');
+
+/* =========================================================
+   INDEXEDDB + STATE
+   ========================================================= */
+const IDB_NAME='HisaabLiteDB', IDB_VERSION=1, IDB_STORE='kv';
+function openIDB(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open(IDB_NAME,IDB_VERSION);
+    r.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains(IDB_STORE)) d.createObjectStore(IDB_STORE);
+    };
+    r.onsuccess=e=>res(e.target.result);
+    r.onerror=e=>rej(e.target.error);
+  });
+}
+async function idbSet(k,v){
+  try{
+    const d=await openIDB();
+    return new Promise((res,rej)=>{
+      const tx=d.transaction(IDB_STORE,'readwrite');
+      const rq=tx.objectStore(IDB_STORE).put(v,k);
+      rq.onsuccess=()=>res(true); rq.onerror=()=>rej(rq.error);
+    });
+  }catch(e){console.warn('idbSet',e);}
+}
+async function idbGet(k){
+  try{
+    const d=await openIDB();
+    return new Promise((res,rej)=>{
+      const tx=d.transaction(IDB_STORE,'readonly');
+      const rq=tx.objectStore(IDB_STORE).get(k);
+      rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error);
+    });
+  }catch(e){return null;}
+}
+
+let db = {
+  customers: JSON.parse(localStorage.getItem('hlite_c'))||[],
+  contacts:  JSON.parse(localStorage.getItem('hlite_w'))||[],
+  config:    JSON.parse(localStorage.getItem('hlite_cfg'))||{shop:'HISAAB PRO',ph:'0300-0000000'},
+  trash:     JSON.parse(localStorage.getItem('hlite_t'))||[]
+};
+let activeId = null;
+let delAction = null;
+
+async function restoreFromIDB(){
+  try{
+    const [c,w,cfg,t] = await Promise.all([
+      idbGet('hlite_c'), idbGet('hlite_w'), idbGet('hlite_cfg'), idbGet('hlite_t')
+    ]);
+    if((!db.customers||db.customers.length===0) && Array.isArray(c) && c.length) db.customers=c;
+    if((!db.contacts||db.contacts.length===0) && Array.isArray(w) && w.length) db.contacts=w;
+    if(cfg && typeof cfg==='object') db.config=cfg;
+    if((!db.trash||db.trash.length===0) && Array.isArray(t) && t.length) db.trash=t;
+    idbSet('hlite_c',db.customers); idbSet('hlite_w',db.contacts);
+    idbSet('hlite_cfg',db.config); idbSet('hlite_t',db.trash);
+  }catch(e){console.warn(e);}
+}
+restoreFromIDB();
+
+function sync(){
+  try{
+    localStorage.setItem('hlite_c',JSON.stringify(db.customers));
+    localStorage.setItem('hlite_w',JSON.stringify(db.contacts));
+    localStorage.setItem('hlite_cfg',JSON.stringify(db.config));
+    localStorage.setItem('hlite_t',JSON.stringify(db.trash));
+  }catch(e){}
+  idbSet('hlite_c',db.customers); idbSet('hlite_w',db.contacts);
+  idbSet('hlite_cfg',db.config); idbSet('hlite_t',db.trash);
+  const s=document.getElementById('hdShop'), p=document.getElementById('hdPhone');
+  const cs=document.getElementById('capShop'), cp=document.getElementById('capPhone');
+  if(s) s.textContent=db.config.shop;
+  if(p) p.textContent=db.config.ph;
+  if(cs) cs.textContent=db.config.shop;
+  if(cp) cp.textContent=db.config.ph;
+}
+
+/* =========================================================
+   TOASTS
+   ========================================================= */
+function toast(msg,type='info'){
+  const box=document.getElementById('toasts');
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  const icon = type==='success'?'✅':type==='error'?'🚨':'ℹ️';
+  t.innerHTML = `<span>${icon}</span><span style="flex:1">${msg}</span>`;
+  box.appendChild(t);
+  setTimeout(()=>t.classList.add('t-out'),3000);
+  setTimeout(()=>t.remove(),3400);
+}
+
+/* =========================================================
+   DRAWER
+   ========================================================= */
+function openDrawer(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerBd').classList.add('on');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerBd').classList.remove('on');
+}
+
+/* =========================================================
+   MODAL HELPERS
+   ========================================================= */
+function openModal(id){
+  const bd=document.getElementById('bd');
+  bd.classList.add('on');
+  document.querySelectorAll('#bd .modal').forEach(m=>m.classList.add('hidden'));
+  const m=document.getElementById(id);
+  m.classList.remove('hidden');
+  bd.scrollTop=0;
+}
+function closeModal(){
+  const bd=document.getElementById('bd');
+  bd.classList.remove('on');
+  setTimeout(()=>document.querySelectorAll('#bd .modal').forEach(m=>m.classList.add('hidden')),200);
+}
+function openHelp(){
+  document.getElementById('bdHelp').classList.add('on');
+}
+function closeHelp(){
+  document.getElementById('bdHelp').classList.remove('on');
+}
+
+/* =========================================================
+   CALCULATIONS
+   ========================================================= */
+function totals(entries){
+  let s=0,b=0,bill=0,paid=0;
+  entries.forEach(e=>{
+    s+=Number(e.sent||0); b+=Number(e.back||0);
+    bill+=Number(e.bill||0); paid+=(Number(e.cash||0)+Number(e.bank||0));
+  });
+  return { hold:s-b, balance:bill-paid };
+}
+function fmtNum(n){ return Number(n||0).toLocaleString('en-PK'); }
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* =========================================================
+   HOME RENDER
+   ========================================================= */
+function render(){
+  const list=document.getElementById('accList');
+  const q=(document.getElementById('searchIn').value||'').toLowerCase().trim();
+  const dF=document.getElementById('dateIn').value;
+  list.innerHTML='';
+  let th=0, tb=0;
+
+  const filtered = db.customers.filter(c=>{
+    const tMatch = !q || c.name.toLowerCase().includes(q) || String(c.phone).includes(q)
+      || c.entries.some(e=>String(e.id).slice(-4).includes(q));
+    const dMatch = !dF || c.entries.some(e=>e.date===dF);
+    return tMatch && dMatch;
+  });
+
+  if(filtered.length===0){
+    list.innerHTML = `<div class="empty"><span class="empty-ic">📁</span><p>No matching active records</p></div>`;
+    document.getElementById('kpiHold').textContent='0';
+    document.getElementById('kpiBal').textContent='Rs 0';
+    return;
+  }
+
+  filtered.forEach(c=>{
+    const t=totals(c.entries);
+    th+=t.hold; tb+=t.balance;
+    const el=document.createElement('div');
+    el.className='acc';
+    el.onclick=()=>openLedger(c.id);
+    el.innerHTML = `
+      <div class="acc-hdr">
+        <div class="acc-info">
+          <div class="acc-name">${esc(c.name)}</div>
+          <div class="acc-phone">${esc(c.phone)}</div>
+        </div>
+        <button class="acc-del" onclick="event.stopPropagation();confirmDelete('client',${c.id},'${c.name.replace(/'/g,"\\'")}')" aria-label="Delete">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </button>
+      </div>
+      <div class="acc-stats">
+        <div class="stat stat-hold">
+          <div class="stat-lbl">Hold</div>
+          <div class="stat-val">${t.hold}</div>
+        </div>
+        <div class="stat stat-bal">
+          <div class="stat-lbl">Balance</div>
+          <div class="stat-val">Rs ${fmtNum(t.balance)}</div>
+        </div>
+      </div>`;
+    list.appendChild(el);
+  });
+  document.getElementById('kpiHold').textContent=th;
+  document.getElementById('kpiBal').textContent='Rs '+fmtNum(tb);
+}
+function clearFilters(){
+  document.getElementById('searchIn').value='';
+  document.getElementById('dateIn').value='';
+  render();
+  toast('Filters cleared','info');
+}
+
+/* =========================================================
+   LEDGER
+   ========================================================= */
+function openLedger(id){
+  activeId=id;
+  const c=db.customers.find(x=>x.id===id);
+  if(!c){ toast('Client not found','error'); return; }
+  const t=totals(c.entries);
+  document.getElementById('lgName').textContent=c.name;
+  document.getElementById('lgPhone').textContent=c.phone;
+  document.getElementById('lgHold').textContent=t.hold;
+  document.getElementById('lgBal').textContent='Rs '+fmtNum(t.balance);
+
+  const list=document.getElementById('slipList');
+  list.innerHTML='';
+  if(c.entries.length===0){
+    list.innerHTML=`<div class="empty"><span class="empty-ic">📒</span><p>No transactional slips</p></div>`;
+  } else {
+    c.entries.slice().sort((a,b)=>b.id-a.id).forEach(e=>{
+      const bal=Number(e.bill)-(Number(e.cash)+Number(e.bank));
+      const el=document.createElement('div');
+      el.className='slip';
+      el.innerHTML=`
+        <div class="slip-hdr">
+          <span class="slip-id">ID #${String(e.id).slice(-4)}</span>
+          <div class="slip-tools">
+            <button class="tool-edit" onclick="editSlip(${e.id})">✏️ Edit</button>
+            <button class="tool-receipt" onclick="captureSlip(${e.id})">📸 Receipt</button>
+            <button class="tool-del" onclick="confirmDelete('entry',${e.id},'${String(e.id).slice(-4)}')">✕ Delete</button>
+          </div>
+        </div>
+        <div class="slip-bill">
+          <span class="slip-bill-l">Total Bill</span>
+          <span class="slip-bill-v">Rs ${fmtNum(e.bill)}</span>
+        </div>
+        <div class="slip-grid">
+          <div class="slip-box">
+            <div class="lbl">Stocks</div>
+            <div class="vals"><span>Sent: ${e.sent}</span><span>Back: ${e.back}</span></div>
+          </div>
+          <div class="slip-box paid">
+            <div class="lbl">Payments</div>
+            <div class="vals"><span>Cash: ${e.cash}</span><span>Bank: ${e.bank}</span></div>
+          </div>
+        </div>
+        ${e.note?`<div class="slip-note">📝 ${esc(e.note)}</div>`:''}
+        <div class="slip-foot">
+          <span>${esc(e.date)}${e.time?' · '+esc(e.time):''}</span>
+          <span>Unpaid: <span class="unpaid">Rs ${fmtNum(bal)}</span></span>
+        </div>`;
+      list.appendChild(el);
+    });
+  }
+  document.getElementById('ledger').classList.add('on');
+}
+function closeLedger(){
+  document.getElementById('ledger').classList.remove('on');
+  activeId=null;
+  render();
+}
+
+/* =========================================================
+   SLIP MODAL
+   ========================================================= */
+function openSlipModal(){
+  if(!activeId){ toast('Select a client first','error'); return; }
+  document.getElementById('fSlipId').value='';
+  ['fBill','fSent','fBack','fCash','fBank','fNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fDate').valueAsDate=new Date();
+  openModal('mSlip');
+}
+function editSlip(sid){
+  const c=db.customers.find(x=>x.id===activeId);
+  const e=c.entries.find(x=>x.id===sid);
+  document.getElementById('fSlipId').value=e.id;
+  document.getElementById('fSent').value=e.sent;
+  document.getElementById('fBack').value=e.back;
+  document.getElementById('fBill').value=e.bill;
+  document.getElementById('fCash').value=e.cash;
+  document.getElementById('fBank').value=e.bank;
+  document.getElementById('fNote').value=e.note||'';
+  document.getElementById('fDate').value=e.date;
+  openModal('mSlip');
+}
+function saveSlip(){
+  const c=db.customers.find(x=>x.id===activeId);
+  if(!c){ toast('Client missing','error'); return; }
+  const editId=document.getElementById('fSlipId').value;
+  const now=new Date();
+  const time=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const data={
+    sent:document.getElementById('fSent').value||0,
+    back:document.getElementById('fBack').value||0,
+    bill:document.getElementById('fBill').value||0,
+    cash:document.getElementById('fCash').value||0,
+    bank:document.getElementById('fBank').value||0,
+    note:document.getElementById('fNote').value||'',
+    date:document.getElementById('fDate').value||now.toISOString().slice(0,10),
+    time
+  };
+  if(editId){
+    Object.assign(c.entries.find(x=>String(x.id)===String(editId)), data);
+    toast('Slip updated','success');
+  } else {
+    c.entries.push({id:Date.now(), ...data});
+    toast('Slip saved','success');
+  }
+  sync(); closeModal(); openLedger(activeId); render();
+}
+
+/* =========================================================
+   CLIENT MODAL
+   ========================================================= */
+function openClientModal(){
+  document.getElementById('fClientId').value='';
+  document.getElementById('fClientName').value='';
+  document.getElementById('fClientPhone').value='';
+  openModal('mClient');
+}
+function openClientEdit(){
+  const c=db.customers.find(x=>x.id===activeId);
+  if(!c) return;
+  document.getElementById('fClientId').value=c.id;
+  document.getElementById('fClientName').value=c.name;
+  document.getElementById('fClientPhone').value=c.phone;
+  openModal('mClient');
+}
+function saveClient(){
+  const n=document.getElementById('fClientName').value.trim();
+  const p=document.getElementById('fClientPhone').value.trim();
+  const editId=document.getElementById('fClientId').value;
+  if(!n||!p){ toast('Name and Phone required','error'); return; }
+  if(editId){
+    const c=db.customers.find(x=>String(x.id)===String(editId));
+    c.name=n; c.phone=p;
+    toast('Client updated','success');
+  } else {
+    db.customers.push({id:Date.now(), name:n, phone:p, entries:[]});
+    toast('Client created','success');
+  }
+  sync(); closeModal(); render();
+  if(editId && activeId) openLedger(activeId);
+}
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+function openSettings(){
+  document.getElementById('fShop').value=db.config.shop;
+  document.getElementById('fShopPhone').value=db.config.ph;
+  closeDrawer();
+  openModal('mSettings');
+}
+function saveSettings(){
+  db.config.shop=document.getElementById('fShop').value.trim()||'HISAAB PRO';
+  db.config.ph=document.getElementById('fShopPhone').value.trim()||'0300-0000000';
+  sync(); closeModal();
+  toast('Settings saved','success');
+}
+
+/* =========================================================
+   TRASH
+   ========================================================= */
+function openTrash(){
+  closeDrawer();
+  renderTrash();
+  openModal('mTrash');
+}
+function renderTrash(){
+  const box=document.getElementById('trashList');
+  box.innerHTML='';
+  if(db.trash.length===0){
+    box.innerHTML=`<div style="text-align:center;padding:30px 0;color:var(--text-dim);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px">🗑️ Trash is empty</div>`;
+    return;
+  }
+  db.trash.forEach(it=>{
+    const name = it.type==='client'?it.data.name:`Slip #${String(it.data.id).slice(-4)} · ${it.parentName||''}`;
+    const el=document.createElement('div');
+    el.className='tlist-item';
+    el.innerHTML=`
+      <div class="info">
+        <div class="type">${it.type}</div>
+        <div class="name">${esc(name)}</div>
+      </div>
+      <div class="tlist-actions">
+        <button class="mini-btn mini-restore" onclick="restoreTrash('${it.trashId}')">Restore</button>
+        <button class="mini-btn mini-purge" onclick="purgeTrash('${it.trashId}')">Purge</button>
+      </div>`;
+    box.appendChild(el);
+  });
+}
+function restoreTrash(tid){
+  const it=db.trash.find(x=>x.trashId===tid);
+  if(!it) return;
+  if(it.type==='client'){
+    db.customers.push(it.data);
+  } else if(it.type==='entry'){
+    const parent=db.customers.find(x=>x.id===it.parentId);
+    if(parent) parent.entries.push(it.data);
+    else { toast('Parent client missing','error'); return; }
+  }
+  db.trash=db.trash.filter(x=>x.trashId!==tid);
+  sync(); renderTrash(); render();
+  if(activeId && it.type==='entry') openLedger(activeId);
+  toast('Item restored','success');
+}
+function purgeTrash(tid){
+  db.trash=db.trash.filter(x=>x.trashId!==tid);
+  sync(); renderTrash();
+  toast('Purged','info');
+}
+function emptyTrash(){
+  if(db.trash.length===0) return;
+  db.trash=[];
+  sync(); renderTrash();
+  toast('Trash emptied','info');
+}
+
+/* =========================================================
+   WHATSAPP DIRECT
+   ========================================================= */
+function openWADirect(){
+  closeDrawer();
+  renderWA();
+  openModal('mWA');
+}
+function renderWA(){
+  const box=document.getElementById('waList');
+  box.innerHTML='';
+  if(db.contacts.length===0){
+    box.innerHTML=`<div style="text-align:center;padding:30px 0;color:var(--text-dim);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px">No contacts</div>`;
+    return;
+  }
+  db.contacts.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='tlist-item';
+    el.innerHTML=`
+      <div class="info" onclick="window.open('https://wa.me/${esc(c.num)}','_blank')" style="cursor:pointer">
+        <div class="type">WhatsApp</div>
+        <div class="name">${esc(c.name)}</div>
+        <div style="font-size:10px;font-weight:800;color:var(--accent);margin-top:2px">${esc(c.num)}</div>
+      </div>
+      <div class="tlist-actions">
+        <button class="mini-btn mini-purge" onclick="deleteWAContact(${c.id})">✕</button>
+      </div>`;
+    box.appendChild(el);
+  });
+}
+function addWAContact(){
+  const n=prompt('Contact Name:'); if(!n) return;
+  const p=prompt('WhatsApp number with country code (e.g. 923001234567):'); if(!p) return;
+  db.contacts.push({id:Date.now(), name:n, num:p.replace(/[+\-\s]/g,'')});
+  sync(); renderWA();
+  toast('Contact added','success');
+}
+function deleteWAContact(id){
+  db.contacts=db.contacts.filter(c=>c.id!==id);
+  sync(); renderWA();
+  toast('Contact removed','info');
+}
+
+/* =========================================================
+   DELETE CONFIRM
+   ========================================================= */
+function confirmDelete(type,id,val){
+  delAction={type,id,val};
+  document.getElementById('delTarget').textContent=val;
+  document.getElementById('delInput').value='';
+  openModal('mDelete');
+  const btn=document.getElementById('delConfirmBtn');
+  btn.onclick=()=>{
+    if(document.getElementById('delInput').value!==val){
+      toast('Verification incorrect','error');
+      return;
+    }
+    if(type==='client'){
+      const c=db.customers.find(x=>x.id===id);
+      if(!c) return;
+      db.trash.push({trashId:'t_'+Date.now(), type:'client', data:c, deletedAt:Date.now()});
+      db.customers=db.customers.filter(x=>x.id!==id);
+      closeModal(); closeLedger(); render();
+      toast('Account moved to trash','success');
+    } else if(type==='entry'){
+      const c=db.customers.find(x=>x.id===activeId);
+      if(!c) return;
+      const e=c.entries.find(x=>x.id===id);
+      if(!e) return;
+      db.trash.push({trashId:'t_'+Date.now(), type:'entry', data:e, parentId:c.id, parentName:c.name, deletedAt:Date.now()});
+      c.entries=c.entries.filter(x=>x.id!==id);
+      sync(); closeModal();
+      if(activeId) openLedger(activeId);
+      render();
+      toast('Slip moved to trash','success');
+    }
+    delAction=null;
+  };
+}
+
+/* =========================================================
+   CANVAS CAPTURE (html2canvas replacement)
+   ========================================================= */
+function nodeToCanvas(node, scale){
+  scale = scale || 2;
+  const clone = node.cloneNode(true);
+  clone.style.position='static';
+  clone.style.left='0';
+  clone.style.top='0';
+  clone.style.transform='none';
+  return new Promise((resolve,reject)=>{
+    try{
+      const w = node.offsetWidth || 420;
+      const h = node.offsetHeight || 600;
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(w*scale);
+      canvas.height = Math.ceil(h*scale);
+      const ctx = canvas.getContext('2d');
+      ctx.scale(scale,scale);
+      ctx.fillStyle='#ffffff';
+      ctx.fillRect(0,0,w,h);
+      // Draw the offscreen node manually by serializing into an SVG foreignObject
+      const html = new XMLSerializer().serializeToString(clone);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+        <foreignObject width="100%" height="100%">${html}</foreignObject>
+      </svg>`;
+      const img = new Image();
+      const svgBlob = new Blob([svg], {type:'image/svg+xml;charset=utf-8'});
+      const url = URL.createObjectURL(svgBlob);
+      img.onload = ()=>{
+        ctx.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        resolve(canvas);
+      };
+      img.onerror = (err)=>{
+        URL.revokeObjectURL(url);
+        reject(err);
+      };
+      img.src = url;
+    }catch(e){ reject(e); }
+  });
+}
+async function captureNode(filename){
+  toast('Generating image...','info');
+  const node = document.getElementById('capZone');
+  try{
+    const canvas = await nodeToCanvas(node, 2);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    const a = document.createElement('a');
+    a.href=dataUrl; a.download=filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast('Image saved','success');
+  }catch(e){
+    console.warn(e);
+    // Fallback: open print dialog
+    toast('Using print fallback','info');
+    setTimeout(()=>window.print(),300);
+  }
+}
+
+function captureStatement(){
+  const c = db.customers.find(x=>x.id===activeId);
+  if(!c) return;
+  const t = totals(c.entries);
+  const body = document.getElementById('capBody');
+  body.innerHTML = `
+    <div style="text-align:center;margin-bottom:26px">
+      <p style="font-size:11px;font-weight:900;color:#4f46e5;text-transform:uppercase;letter-spacing:2px;margin:0 0 5px 0">Account Statement</p>
+      <h3 style="font-size:26px;font-weight:900;color:#0f172a;margin:0;letter-spacing:-.5px">${esc(c.name)}</h3>
+      <p style="font-size:12px;font-weight:800;color:#4f46e5;margin-top:5px">Contact: ${esc(c.phone)}</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+      <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:16px;padding:18px;text-align:center">
+        <p style="font-size:9px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 6px 0">Active Hold</p>
+        <p style="font-size:26px;font-weight:900;color:#1e1b4b;margin:0">${t.hold}</p>
+      </div>
+      <div style="background:#fff5f5;border:2px solid #fecaca;border-radius:16px;padding:18px;text-align:center">
+        <p style="font-size:9px;font-weight:900;color:#dc2626;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 6px 0">Unpaid Balance</p>
+        <p style="font-size:26px;font-weight:900;color:#b91c1c;margin:0">Rs ${fmtNum(t.balance)}</p>
+      </div>
+    </div>
+    <p style="font-size:10px;text-align:center;color:#94a3b8;font-weight:800;text-transform:uppercase;letter-spacing:1px;border-top:1px solid #f1f5f9;padding-top:14px;margin:0">
+      Generated ${new Date().toLocaleString()}
+    </p>`;
+  captureNode(`${c.name.replace(/\s+/g,'_')}_Statement.jpg`);
+}
+function captureSlip(sid){
+  const c = db.customers.find(x=>x.id===activeId);
+  const e = c.entries.find(x=>x.id===sid);
+  const rem = Number(e.bill)-(Number(e.cash)+Number(e.bank));
+  const body = document.getElementById('capBody');
+  body.innerHTML = `
+    <div style="padding:8px 0 14px;border-bottom:2px dashed #e2e8f0;margin-bottom:22px">
+      <p style="font-size:10px;font-weight:900;color:#4f46e5;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 5px 0">Bill For Client</p>
+      <p style="font-size:24px;font-weight:900;color:#0f172a;margin:0;line-height:1.15">${esc(c.name)}</p>
+      <p style="font-size:12px;font-weight:700;color:#64748b;margin-top:6px">Slip: ID-${String(sid).slice(-4)} · ${esc(e.date)}${e.time?' '+esc(e.time):''}</p>
+    </div>
+    <div style="background:#0f172a;padding:22px 18px;border-radius:16px;text-align:center;margin-bottom:20px">
+      <p style="font-size:11px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin:0 0 6px 0">Bill Total</p>
+      <p style="font-size:36px;font-weight:900;color:#fff;margin:0;letter-spacing:-1px">Rs ${fmtNum(e.bill)}</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:20px">
+      <div style="background:#fff;padding:14px;border-radius:12px;border:2px solid #f1f5f9;text-align:center">
+        <p style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;margin:0 0 4px 0">Sent</p>
+        <p style="font-size:18px;font-weight:900;color:#0f172a;margin:0">${esc(e.sent)}</p>
+      </div>
+      <div style="background:#fff;padding:14px;border-radius:12px;border:2px solid #f1f5f9;text-align:center">
+        <p style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;margin:0 0 4px 0">Returned</p>
+        <p style="font-size:18px;font-weight:900;color:#0f172a;margin:0">${esc(e.back)}</p>
+      </div>
+      <div style="background:#f0fdf4;padding:14px;border-radius:12px;border:2px solid #bbf7d0;text-align:center">
+        <p style="font-size:9px;font-weight:900;color:#15803d;text-transform:uppercase;margin:0 0 4px 0">Cash</p>
+        <p style="font-size:18px;font-weight:900;color:#166534;margin:0">Rs ${esc(e.cash)}</p>
+      </div>
+      <div style="background:#eff6ff;padding:14px;border-radius:12px;border:2px solid #bfdbfe;text-align:center">
+        <p style="font-size:9px;font-weight:900;color:#1d4ed8;text-transform:uppercase;margin:0 0 4px 0">Bank</p>
+        <p style="font-size:18px;font-weight:900;color:#1e3a8a;margin:0">Rs ${esc(e.bank)}</p>
+      </div>
+    </div>
+    <div style="background:#fff5f5;padding:18px;border-radius:16px;border:2px solid #fecaca;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <span style="font-size:12px;font-weight:900;color:#991b1b;text-transform:uppercase;letter-spacing:1px">Unpaid</span>
+      <span style="font-size:22px;font-weight:900;color:#b91c1c">Rs ${fmtNum(rem)}</span>
+    </div>
+    ${e.note?`<div style="background:#fffbeb;padding:14px;border-radius:12px;border:1.5px dashed #f59e0b">
+      <p style="font-size:10px;font-weight:900;color:#b45309;text-transform:uppercase;margin:0 0 4px 0">Note</p>
+      <p style="font-size:13px;font-weight:700;color:#78350f;font-style:italic;margin:0;line-height:1.5">${esc(e.note)}</p>
+    </div>`:''}`;
+  captureNode(`Invoice_Slip_${String(sid).slice(-4)}.jpg`);
+}
+
+/* =========================================================
+   PDF (via Print → Save as PDF, no library)
+   ========================================================= */
+function downloadPDF(){
+  const c=db.customers.find(x=>x.id===activeId);
+  if(!c) return;
+  const t=totals(c.entries);
+  const rows = c.entries.slice().sort((a,b)=>b.id-a.id).map(e=>{
+    const bal = Number(e.bill)-(Number(e.cash)+Number(e.bank));
+    return `<tr>
+      <td>${esc(e.date)}<br><small>${esc(e.time||'')}</small></td>
+      <td>#${String(e.id).slice(-4)}</td>
+      <td>${esc(e.sent)}</td>
+      <td>${esc(e.back)}</td>
+      <td>Rs ${fmtNum(e.cash)}</td>
+      <td>Rs ${fmtNum(e.bank)}</td>
+      <td class="strong">Rs ${fmtNum(e.bill)}</td>
+      <td class="unpaid">Rs ${fmtNum(bal)}</td>
+    </tr>`;
+  }).join('');
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(c.name)}_Statement</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:26px;color:#0f172a;font-size:11px}
+    h1{font-size:20px;font-weight:900;margin-bottom:4px}
+    .sub{color:#64748b;font-size:11px;margin-bottom:18px}
+    .hr{height:1px;background:#e2e8f0;margin:14px 0}
+    .kpi{display:flex;gap:20px;background:#f8fafc;padding:14px;border-radius:10px;margin-bottom:16px;font-weight:900}
+    .kpi .unpaid{color:#b91c1c}
+    table{width:100%;border-collapse:collapse;margin-top:6px}
+    th,td{padding:7px 8px;text-align:left;border-bottom:1px solid #e2e8f0;vertical-align:middle;font-size:10.5px}
+    th{background:#1e1b4b;color:#fff;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:800}
+    tr:nth-child(even) td{background:#f9fafb}
+    td.strong{font-weight:900}
+    td.unpaid{font-weight:900;color:#b91c1c}
+    small{color:#64748b;font-size:9px}
+    .foot{margin-top:20px;color:#94a3b8;font-size:9.5px;text-align:center;border-top:1px dashed #e2e8f0;padding-top:12px;font-weight:800;letter-spacing:.5px}
+  </style></head><body>
+    <h1>${esc(db.config.shop)}</h1>
+    <div class="sub">Official Contact: ${esc(db.config.ph)}</div>
+    <div class="hr"></div>
+    <div style="font-size:14px;font-weight:900">${esc(c.name)}</div>
+    <div class="sub">${esc(c.phone)} · ${new Date().toLocaleString()}</div>
+    <div class="kpi">
+      <span>Stock Hold: ${t.hold}</span>
+      <span class="unpaid">Total Outstanding: Rs ${fmtNum(t.balance)}</span>
+    </div>
+    <table>
+      <thead><tr>
+        <th>Date</th><th>ID</th><th>Sent</th><th>Back</th><th>Cash</th><th>Bank</th><th>Bill</th><th>Unpaid</th>
+      </tr></thead>
+      <tbody>${rows||'<tr><td colspan="8" style="text-align:center;padding:20px;color:#94a3b8">No slips</td></tr>'}</tbody>
+    </table>
+    <div class="foot">Hisaab Pro Lite · Audit Statement · ${new Date().toLocaleDateString()}</div>
+  </body></html>`);
+  win.document.close();
+  setTimeout(()=>{ win.focus(); win.print(); }, 400);
+  toast('Print dialog opened','info');
+}
+
+/* =========================================================
+   WHATSAPP STATEMENT
+   ========================================================= */
+function sendWAStatement(){
+  const c=db.customers.find(x=>x.id===activeId);
+  if(!c) return;
+  const t=totals(c.entries);
+  const msg = `*${db.config.shop}*\nClient Ledger: *${c.name}*\nStock Hold: *${t.hold}*\nOutstanding: *Rs ${fmtNum(t.balance)}*`;
+  const p = String(c.phone).replace(/\D/g,'');
+  const url = p ? `https://wa.me/${p}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
+}
+
+/* =========================================================
+   BACKUP / RESTORE
+   ========================================================= */
+function exportData(){
+  try{
+    const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`HisaabLite_Backup_${new Date().toISOString().slice(0,10)}.txt`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+    toast('Backup downloaded','success');
+  }catch(e){ toast('Backup failed','error'); }
+}
+function importData(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(d && typeof d==='object' && Array.isArray(d.customers)){
+        db=d; sync(); render();
+        toast('Database restored','success');
+      } else {
+        toast('Invalid backup file','error');
+      }
+    }catch(err){ toast('Restore failed','error'); }
+  };
+  r.readAsText(f);
+  e.target.value='';
+}
+
+/* =========================================================
+   STANDALONE HTML EXPORT (self-clone)
+   ========================================================= */
+function downloadStandaloneHTML(){
+  try{
+    toast('Preparing HTML...','info');
+    const bundle = {
+      hlite_c: db.customers,
+      hlite_w: db.contacts,
+      hlite_cfg: db.config,
+      hlite_t: db.trash,
+      exportedAt: new Date().toISOString()
+    };
+    let html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    // Inject embedded bundle
+    html = html.replace(/<\/body>/,
+      `<script id="hliteBundle" type="application\/json">${JSON.stringify(bundle)}<\/script>
+       <script>
+         try{
+           const b=JSON.parse(document.getElementById('hliteBundle').textContent);
+           if(b.hlite_c) localStorage.setItem('hlite_c', JSON.stringify(b.hlite_c));
+           if(b.hlite_w) localStorage.setItem('hlite_w', JSON.stringify(b.hlite_w));
+           if(b.hlite_cfg) localStorage.setItem('hlite_cfg', JSON.stringify(b.hlite_cfg));
+           if(b.hlite_t) localStorage.setItem('hlite_t', JSON.stringify(b.hlite_t));
+         }catch(e){}
+       <\/script>
+       </body>`);
+    const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='HisaabProLite.html';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+    toast('HTML downloaded','success');
+  }catch(e){
+    toast('Export failed','error');
+  }
+}
+
+/* =========================================================
+   PWA
+   ========================================================= */
+const PWA_STANDALONE =
+  window.matchMedia('(display-mode: standalone)').matches ||
+  window.navigator.standalone === true ||
+  document.referrer.startsWith('android-app://');
+
+let deferredPrompt = null;
+
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js',{scope:'./'})
+      .then(r=>console.log('[PWA] SW registered:', r.scope))
+      .catch(e=>console.warn('[PWA] SW failed:', e));
+  });
+}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  if(!PWA_STANDALONE) showInstallBanner();
+});
+window.addEventListener('appinstalled',()=>{
+  deferredPrompt=null;
+  hideInstallBanner();
+  localStorage.setItem('hlite_installed','1');
+  toast('App installed! 🎉','success');
+});
+
+function showInstallBanner(){
+  const b=document.getElementById('installBanner');
+  if(b && !localStorage.getItem('hlite_install_dismissed')) b.classList.add('on');
+}
+function hideInstallBanner(){
+  const b=document.getElementById('installBanner');
+  if(b) b.classList.remove('on');
+}
+function dismissInstall(){
+  hideInstallBanner();
+  localStorage.setItem('hlite_install_dismissed','1');
+}
+async function installPWA(){
+  if(PWA_STANDALONE){ toast('Already installed','success'); return; }
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    const r=await deferredPrompt.userChoice;
+    if(r.outcome==='accepted') toast('Installing...','info');
+    else toast('Cancelled','info');
+    deferredPrompt=null;
+    hideInstallBanner();
+    return;
+  }
+  openInstallHelp();
+}
+function isIOS(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+         (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+}
+function openInstallHelp(){
+  const b=document.getElementById('helpBody');
+  if(isIOS()){
+    b.innerHTML = `
+      <p style="margin-bottom:8px;font-weight:800;color:var(--text-strong)">iPhone / iPad:</p>
+      <ol style="margin-left:20px;display:flex;flex-direction:column;gap:5px">
+        <li>Safari mein kholein</li>
+        <li>Share button (⬆️) dabayein</li>
+        <li><b>"Add to Home Screen"</b> select karein</li>
+        <li><b>Add</b> par tap karein</li>
+      </ol>`;
+  } else if(/Android/i.test(navigator.userAgent)){
+    b.innerHTML = `
+      <p style="margin-bottom:8px;font-weight:800;color:var(--text-strong)">Android (Chrome):</p>
+      <ol style="margin-left:20px;display:flex;flex-direction:column;gap:5px">
+        <li>Chrome mein kholein</li>
+        <li>⋮ (3 dots) menu dabayein</li>
+        <li><b>"Install app"</b> select karein</li>
+        <li>Confirm karein</li>
+      </ol>`;
+  } else {
+    b.innerHTML = `
+      <p style="margin-bottom:8px;font-weight:800;color:var(--text-strong)">Desktop:</p>
+      <ol style="margin-left:20px;display:flex;flex-direction:column;gap:5px">
+        <li>Address bar mein <b>Install</b> icon (⊕) dhoondein</li>
+        <li>Ya browser menu se <b>Install App</b> select karein</li>
+      </ol>
+      <p style="margin-top:12px;font-size:11px;color:var(--text-dim)">⚠️ HTTPS zaruri hai -- GitHub Pages automatic deta hai.</p>`;
+  }
+  openHelp();
+}
+
+/* =========================================================
+   INITIAL BOOT
+   ========================================================= */
+window.addEventListener('load', ()=>{
+  sync();
+  render();
+  if(PWA_STANDALONE) hideInstallBanner();
+});
+
+// Keyboard Esc closes modal/drawer
+window.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('bd').classList.contains('on')) closeModal();
+    else if(document.getElementById('bdHelp').classList.contains('on')) closeHelp();
+    else if(document.getElementById('drawer').classList.contains('open')) closeDrawer();
+    else if(document.getElementById('ledger').classList.contains('on')) closeLedger();
+  }
+});
+</script>
+</body>
+</html>
